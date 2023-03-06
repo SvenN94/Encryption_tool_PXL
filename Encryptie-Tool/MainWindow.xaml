@@ -1,0 +1,26 @@
+﻿<Window x:Class="Encryptie_Tool.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Encryptie_Tool"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <DockPanel>
+            <Menu DockPanel.Dock="Top">
+                <MenuItem Header="_File">
+                    <MenuItem Header="_KiesBestand"/>                    
+                </MenuItem>            
+               <MenuItem Header="AES">
+                    <MenuItem Header="_Folder"></MenuItem>
+                    <MenuItem Header="_KeySelecteren"></MenuItem>
+                </MenuItem>
+                <MenuItem Header="RSA">
+                    <MenuItem Header="_Folder"></MenuItem>
+                    <MenuItem Header="_KeySelecteren"></MenuItem>
+                </MenuItem>
+            </Menu>
+    </DockPanel> 
+    </Grid>
+</Window>
