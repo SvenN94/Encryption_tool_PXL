@@ -6,7 +6,18 @@
         xmlns:local="clr-namespace:Encryptie_Tool"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
-
-    </Grid>
+      <DockPanel>
+        <Menu DockPanel.Dock="Top" >
+            <MenuItem Header="_File" >
+                    <MenuItem Header="Select">
+                        <MenuItem> AES Folder</MenuItem>
+                        <MenuItem> RSA Folder</MenuItem>
+                    </MenuItem>
+            </MenuItem>
+        </Menu>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" >
+            <Button Content=" Generate AES" Width="100" Height="60" Padding="4" />            
+            <Button Content=" Generate RSA" Width="100" Height="60" Padding="4" />
+        </StackPanel>                  
+    </DockPanel>
 </Window>
