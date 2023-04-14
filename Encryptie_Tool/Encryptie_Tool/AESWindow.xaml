@@ -4,9 +4,31 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Encryptie_Tool"
+        xmlns:main="clr-namespace:Encryptie_Tool.Tools"
         mc:Ignorable="d"
         Title="AESWindow" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+    <DockPanel>
+        <Menu DockPanel.Dock="Top" >
+            <MenuItem Header="_File" >
+                <MenuItem Header="Folder">
+                    <MenuItem Header="AES" x:Name="AesFolderMenu" Click="AesFolderMenu_Click"/>
+                    <MenuItem Header="RSA" x:Name="RsaFolderMenu" Click="RsaFolderMenu_Click"/>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Header="AES" x:Name="AesWindowMenu" Click="AesWindowMenu_Click" >
+
+                <MenuItem Header="_Folder">
+                    <MenuItem Header="_Cyphertext"/>
+                    <MenuItem Header="_Plaintext"/>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Header="RSA" x:Name="RsaWindowManu" Click="RsaWindowManu_Click" >
+
+            </MenuItem>
+        </Menu>
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Button x:Name="BtnEncrypt" Content="Encrypt" Height="30" Width="100" Margin="0,0,0,10"/>
+            <Button x:Name="BtnDecrypt" Content="Decrypt" Height="30"/>
+        </StackPanel>
+    </DockPanel>
 </Window>
