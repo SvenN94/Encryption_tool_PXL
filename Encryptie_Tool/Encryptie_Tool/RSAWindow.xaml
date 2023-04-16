@@ -15,14 +15,16 @@
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="AES" x:Name="AesWindowMenu" Click="AesWindowMenu_Click" >
-
                 <MenuItem Header="_Folder">
-                    <MenuItem Header="_Cyphertext"/>
-                    <MenuItem Header="_Plaintext"/>
+                    <MenuItem Header="_Ciphertext" x:Name="AesCipherMenu" Click="AesCipherMenu_Click"/>
+                    <MenuItem Header="_Plaintext" x:Name="AesPlainMenu" Click="AesPlainMenu_Click"/>
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="RSA" x:Name="RsaWindowManu" Click="RsaWindowManu_Click" >
-
+                <MenuItem Header="_Folder">
+                    <MenuItem Header="_Ciphertext" x:Name="RsaCipherMenu" Click="RsaCipherMenu_Click" />
+                    <MenuItem Header="_Plaintext" x:Name="RsaPlainMenu" Click="RsaPlainMenu_Click"/>
+                </MenuItem>
             </MenuItem>
         </Menu>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
@@ -31,8 +33,11 @@
             <Button x:Name="BtnDecrypt" Content="Decrypt" Height="30"/>
         </StackPanel>
             <StackPanel>
-                <Button Content="Select Private Key" Height="30"  Width="100" Margin="0,0,0,10"/>
-                <Button Content="Select Private Key" Height="30"/>
+                <Button Content="Select Private Key" Height="30"  Width="100" Margin="10,0,0,10" x:Name="SlctPrivateKeyBtn"/>                
+                <Button Content="Select Public Key" Height="30"  Width="100" Margin="10,0,0,10" x:Name="SlctPublicKeyBtn"/>                
+            </StackPanel>
+            <StackPanel>
+                
             </StackPanel>
         </StackPanel>
     </DockPanel>

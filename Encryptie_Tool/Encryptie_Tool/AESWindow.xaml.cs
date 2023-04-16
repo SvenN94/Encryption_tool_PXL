@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,7 +21,6 @@ namespace Encryptie_Tool
     /// </summary>
     public partial class AESWindow : Window
     {
-        public string folder;
         public AESWindow()
         {
             InitializeComponent();
@@ -37,37 +37,81 @@ namespace Encryptie_Tool
             wpf.Show();
         }
 
-        private void BtnGenAes_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void BtnGenRsa_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-        string folderAes;
-
         private void AesFolderMenu_Click(object sender, RoutedEventArgs e)
         {
-            //OpenFileDialog ofd = new OpenFileDialog();
-            //ofd.ValidateNames = false;
-            //ofd.CheckFileExists = false;
-            //ofd.CheckPathExists = true;
-            //ofd.FileName = TxtFileName.Text;
-
-
+            FolderBrowserDialog fbp = new FolderBrowserDialog();
+            DialogResult result = fbp.ShowDialog();
+            if (result == System.Windows.Forms.DialogResult.OK)
+            {
+                folderAes = fbp.SelectedPath;
+            }
         }
-        string folderRsa;
+
+        public string folderAes;
+        string folderRsa = string.Empty;
+        string folderAesCipher = string.Empty;
+        string folderAesPlain = string.Empty;
+        string folderRsaCipher = string.Empty;
+        string folderRsaPlain = string.Empty;
+
         private void RsaFolderMenu_Click(object sender, RoutedEventArgs e)
         {
-            System.Windows.Forms.FolderBrowserDialog fbp = new System.Windows.Forms.FolderBrowserDialog();
-            System.Windows.Forms.DialogResult result = fbp.ShowDialog();
+            FolderBrowserDialog fbp = new FolderBrowserDialog();
+            DialogResult result = fbp.ShowDialog();
             if (result == System.Windows.Forms.DialogResult.OK)
             {
                 folderRsa = fbp.SelectedPath;
             }
 
+        }
+
+        private void AesCipherMenu_Click(object sender, RoutedEventArgs e)
+        {
+            FolderBrowserDialog fbp = new FolderBrowserDialog();
+            DialogResult result = fbp.ShowDialog();
+            if (result == System.Windows.Forms.DialogResult.OK)
+            {
+                folderAesCipher = fbp.SelectedPath;
+            }
+        }
+
+        private void AesPlainMenu_Click(object sender, RoutedEventArgs e)
+        {
+            FolderBrowserDialog fbp = new FolderBrowserDialog();
+            DialogResult result = fbp.ShowDialog();
+            if (result == System.Windows.Forms.DialogResult.OK)
+            {
+                folderAesPlain = fbp.SelectedPath;
+            }
+        }
+
+        private void RsaPlainMenu_Click(object sender, RoutedEventArgs e)
+        {
+            FolderBrowserDialog fbp = new FolderBrowserDialog();
+            DialogResult result = fbp.ShowDialog();
+            if (result == System.Windows.Forms.DialogResult.OK)
+            {
+                folderRsaPlain = fbp.SelectedPath;
+            }
+        }
+
+        private void RsaCipherMenu_Click(object sender, RoutedEventArgs e)
+        {
+            FolderBrowserDialog fbp = new FolderBrowserDialog();
+            DialogResult result = fbp.ShowDialog();
+            if (result == System.Windows.Forms.DialogResult.OK)
+            {
+                folderRsaCipher = fbp.SelectedPath;
+            }
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            var filenames = Directory.EnumerateFiles(folderAes, "*.txt", SearchOption.TopDirectoryOnly);
+            foreach (var filename in filenames)
+            {
+                fileLstbox.Items.Add(filename);
+            }
         }
     }
 }
