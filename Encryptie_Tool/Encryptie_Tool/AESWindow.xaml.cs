@@ -28,6 +28,20 @@ namespace Encryptie_Tool
             InitializeComponent();
         }
 
+        #region UserLayout
+
+        private void BtnEncrypt_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void BtnDecrypt_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        #endregion
+
         #region Menu
 
         //Config 
@@ -37,6 +51,7 @@ namespace Encryptie_Tool
         string folderAesPlain = string.Empty;
         string folderRsaCipher = string.Empty;
         string folderRsaPlain = string.Empty;
+
 
 
         //Instantiate new AES window
@@ -97,6 +112,8 @@ namespace Encryptie_Tool
             }
         }
         #endregion
+
+
     }
 
 }

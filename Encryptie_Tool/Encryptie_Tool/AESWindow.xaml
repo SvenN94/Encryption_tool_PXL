@@ -22,14 +22,13 @@
                     <MenuItem Header="_Plaintext" x:Name="RsaPlainMenu" Click="RsaPlainMenu_Click"/>
             </MenuItem>
         </Menu>
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal">
-            <StackPanel Orientation="Vertical" >
-                <Button x:Name="BtnEncrypt" Content="Encrypt" Height="30" Width="100" Margin="0,0,0,10"/>
-                <Button x:Name="BtnDecrypt" Content="Decrypt" Height="30"/>
-            </StackPanel>
-            <StackPanel>
-                <ListBox x:Name="fileLstbox" />
-            </StackPanel>
+        <StackPanel>
+            <WrapPanel HorizontalAlignment="Center">
+                <Button x:Name="btnSelectFile" Content="Select file" ToolTip="ALLAH AU AHKBAR" Width="150px" Height="40px" Margin="10px"></Button>
+                <TextBlock x:Name="txtSelectedFile" Width="250px" Height="40px"></TextBlock>
+            </WrapPanel>
+            <Label Width="150px" Height="30px" Margin="10" Content="Select AES key" FontSize="16" HorizontalContentAlignment="Center"></Label>
+            <ListBox></ListBox>
         </StackPanel>
     </DockPanel>
 </Window>
