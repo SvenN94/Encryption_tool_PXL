@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Encryptie_Tool"
         xmlns:main="clr-namespace:Encryptie_Tool.Tools"
         mc:Ignorable="d"
-        Title="AESWindow" Height="450" Width="800" Loaded="Window_Loaded">
+        Title="AESWindow" Height="451" Width="800" Loaded="Window_Loaded">
     <DockPanel>
         <Menu DockPanel.Dock="Top" >
             <MenuItem Header="_File" >
