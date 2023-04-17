@@ -35,8 +35,9 @@ namespace Encryptie_Tool
         string folderAesPlain = string.Empty;
         string folderRsaCipher = string.Empty;
         string folderRsaPlain = string.Empty;
-        private string selectedImageFilePath = string.Empty;
+        string selectedImageFilePath = string.Empty;
         string AESKey = string.Empty;
+        string saveImageToPath = string.Empty;
 
         #endregion
 
@@ -63,7 +64,7 @@ namespace Encryptie_Tool
         public void SelectImage()
         {
             OpenFileDialog dialog = new OpenFileDialog();
-            dialog.Filter = "Image Files (*.bmp, *.jpg, *.png)|*.bmp;*.jpg;*.png";
+            dialog.Filter = "Image Files (*.bmp, *.jpg, *.png)|*.bmp;*.jpg;*.png"; 
 
             DialogResult result = dialog.ShowDialog();
             if (result == System.Windows.Forms.DialogResult.OK)
@@ -81,15 +82,15 @@ namespace Encryptie_Tool
                 string file = fileLstbox.SelectedItem.ToString();
                 if (File.Exists(file));
                 {
-                    string fileText = File.ReadAllText(file);
+                    string fileText = File.ReadAllText(file); //Read contents from txt files
                     AESKey = fileText;
                 }
-                txtAESKey.Text = AESKey;
+                txtAESKey.Text = AESKey; 
             }
 
         }
 
-        public void EncryptAes(string aesKey, string image)
+        public void EncryptAes(string aesKey, string image, string saveFilePath)
         {
             string keyText = aesKey;
             string[] keyParts = keyText.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
@@ -117,8 +118,41 @@ namespace Encryptie_Tool
                     }
                 }
 
-                // Write the encrypted byte array back to the selected image file, overwriting its previous contents
-                File.WriteAllBytes(image, encryptedData);
+                // Write the encrypted byte array to the specified file path
+                File.WriteAllBytes(saveFilePath, encryptedData);
+            }
+        }
+
+        public void DecryptAes(string aesKey, string encryptedImage, string saveFilePath)
+        {
+            string keyText = aesKey;
+            string[] keyParts = keyText.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+            byte[] key = Convert.FromBase64String(keyParts[0]);
+            byte[] iv = Convert.FromBase64String(keyParts[1]);
+
+            // Create a new Aes object and set its Key and IV properties
+            using (Aes aesobj = Aes.Create())
+            {
+                aesobj.Key = key;
+                aesobj.IV = iv;
+
+                // Read the encrypted image file into a byte array
+                byte[] encryptedData = File.ReadAllBytes(encryptedImage);
+
+                // Decrypt the byte array using the Aes object
+                byte[] imageData = null;
+                using (MemoryStream msDecrypt = new MemoryStream(encryptedData))
+                {
+                    using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, aesobj.CreateDecryptor(), CryptoStreamMode.Read))
+                    {
+                        imageData = new byte[encryptedData.Length];
+                        int bytesRead = csDecrypt.Read(imageData, 0, imageData.Length);
+                        imageData = imageData.Take(bytesRead).ToArray();
+                    }
+                }
+
+                // Write the decrypted byte array to the specified file path
+                File.WriteAllBytes(saveFilePath, imageData);
             }
         }
 
@@ -127,10 +161,12 @@ namespace Encryptie_Tool
         #region UserLayout
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+
             FillListBoxAESKeys();
-            if (!string.IsNullOrEmpty(folderAes))
+            if (!string.IsNullOrEmpty(folderAes))//Checks if path is empty or null, fills listbox if it's not.
             {
-                txtSaveImageAt.Text = folderAes;
+                saveImageToPath = folderAes; 
+                txtSaveImageAt.Text = saveImageToPath;
                 txtAesKeyFolder.Text = folderAes;
             }
         }
@@ -140,14 +176,16 @@ namespace Encryptie_Tool
         {
             SelectImage();
         }
+
         private void btnSelect_Click(object sender, RoutedEventArgs e)
         {
-            using (var folderDialog = new FolderBrowserDialog())
+            using (var folderDialog = new FolderBrowserDialog()) //Open Filedialog
             {
                 if (folderDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
                     string selectedPath = folderDialog.SelectedPath;
-                    txtSaveImageAt.Text = selectedPath;
+                    saveImageToPath = selectedPath;
+                    txtSaveImageAt.Text = selectedPath; //Displays filepath in texblock
                     // save the filepath to a variable if needed
                     string saveImageFilepath = selectedPath;
                 }
@@ -156,16 +194,16 @@ namespace Encryptie_Tool
 
         private void btnLoadAesKeys_Click(object sender, RoutedEventArgs e)
         {
-            fileLstbox.Items.Clear();
+            fileLstbox.Items.Clear(); 
             using (var folderDialog = new FolderBrowserDialog())
             {
                 if (folderDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
                     string selectedPath = folderDialog.SelectedPath;
-                    string[] files = Directory.GetFiles(selectedPath, "*.txt");
+                    string[] files = Directory.GetFiles(selectedPath, "*.txt");//Create array of all files in selected directory
                     foreach (string file in files)
                     {
-                        fileLstbox.Items.Add(file);
+                        fileLstbox.Items.Add(file); //Fill listbox with .txt files
                     }
                     txtAesKeyFolder.Text = selectedPath;
                 }
@@ -174,46 +212,73 @@ namespace Encryptie_Tool
 
         private void fileLstbox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+       
             SelectAESKey();
         }
 
         private void btnEncrypt_Click(object sender, RoutedEventArgs e)
         {
 
+            //Check if image file path is empty
             if (string.IsNullOrEmpty(selectedImageFilePath))
             {
                 System.Windows.MessageBox.Show("Please select an image file to encrypt.");
                 return;
             }
-
+            //Check if AESKey is empty
             if (string.IsNullOrEmpty(AESKey))
             {
                 System.Windows.MessageBox.Show("Please select an AES key to use for encryption.");
                 return;
             }
 
+            //Checks for valid AESKeyfolder
             if (txtAesKeyFolder.Text == "")
             {
                 System.Windows.MessageBox.Show("Please select the folder that contains your AES keys.");
             }
 
+            //Checks for valid directory to save encrypted or decrypted image in
             if (txtSaveImageAt.Text == "")
             {
                 System.Windows.MessageBox.Show("Please select the folder that you want to save your image in.");
             }
-
-            if (true)
-            {
-
-            }
-            EncryptAes(AESKey, selectedImageFilePath);
+            //Encrpyt the selected image using the selected AES key and save it in the selected image destination.
+            EncryptAes(AESKey, selectedImageFilePath, saveImageToPath);
 
             System.Windows.MessageBox.Show("Encryption succesfull.");
         }
 
         private void btnDecrypt_Click(object sender, RoutedEventArgs e)
         {
+            //Check if image file path is empty
+            if (string.IsNullOrEmpty(selectedImageFilePath))
+            {
+                System.Windows.MessageBox.Show("Please select an image file to encrypt.");
+                return;
+            }
+            //Check if AESKey is empty
+            if (string.IsNullOrEmpty(AESKey))
+            {
+                System.Windows.MessageBox.Show("Please select an AES key to use for encryption.");
+                return;
+            }
 
+            //Checks for valid AESKeyfolder
+            if (txtAesKeyFolder.Text == "")
+            {
+                System.Windows.MessageBox.Show("Please select the folder that contains your AES keys.");
+            }
+
+            //Checks for valid directory to save encrypted or decrypted image in
+            if (txtSaveImageAt.Text == "")
+            {
+                System.Windows.MessageBox.Show("Please select the folder that you want to save your image in.");
+            }
+            //Encrpyt the selected image using the selected AES key and save it in the selected image destination.
+            EncryptAes(AESKey, selectedImageFilePath, saveImageToPath);
+
+            System.Windows.MessageBox.Show("Decription succesfull.");
         }
 
         #endregion
