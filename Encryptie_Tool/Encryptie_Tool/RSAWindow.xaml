@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Encryptie_Tool"
         mc:Ignorable="d"
-        Title="RSAWindow" Height="450" Width="800">
+        Title="RSAWindow" Height="450" Width="800" Loaded="Window_Loaded">
     <DockPanel>
         <Menu DockPanel.Dock="Top" >
             <MenuItem Header="_File" >
@@ -22,16 +22,21 @@
             </MenuItem>
         </Menu>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-        <StackPanel>
-            <Button x:Name="BtnEncrypt" Content="Encrypt" Height="30" Width="100" Margin="0,0,0,10"/>
-            <Button x:Name="BtnDecrypt" Content="Decrypt" Height="30"/>
-        </StackPanel>
             <StackPanel>
-                <Button Content="Select Private Key" Height="30"  Width="100" Margin="10,0,0,10" x:Name="SlctPrivateKeyBtn"/>                
-                <Button Content="Select Public Key" Height="30"  Width="100" Margin="10,0,0,10" x:Name="SlctPublicKeyBtn"/>                
+                <Label Content="Private keys"/>
+                <ListBox x:Name="privateLstb" />
+            </StackPanel>
+            <StackPanel Margin="10,0" >
+                <Button Content="Select Private Key" Height="30"  Width="100" Margin="0,0,0,10" x:Name="SlctPrivateKeyBtn" Click="SlctPrivateKeyBtn_Click"/>
+                <Button x:Name="BtnDecrypt" Content="Decrypt" Height="30" Click="BtnDecrypt_Click"/>
+        </StackPanel>
+            <StackPanel Margin="10,0">                                
+                <Button Content="Select Public Key" Height="30"  Width="100" Margin="0,0,0,10" x:Name="SlctPublicKeyBtn" Click="SlctPublicKeyBtn_Click" />
+                <Button x:Name="BtnEncrypt" Content="Encrypt" Height="30" Width="100" Margin="0,0,0,10" Click="BtnEncrypt_Click" />
             </StackPanel>
             <StackPanel>
-                
+                <Label Content="Public keys" />
+                <ListBox x:Name="publicLstb" />
             </StackPanel>
         </StackPanel>
     </DockPanel>
