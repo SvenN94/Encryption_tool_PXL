@@ -89,21 +89,23 @@ namespace Encryptie_Tool
             using (SaveFileDialog dlg = new SaveFileDialog())
             {
                 dlg.Title = "PrivateKey";
-                dlg.InitialDirectory = folderRsa;                                
-
+                dlg.InitialDirectory = folderRsa;
+                
                 if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
-                   ByteArrayToFile(dlg.FileName, privateKeyArray);
+                   string naam = "Private_" + dlg.FileName;
+                   ByteArrayToFile(naam, privateKeyArray);
                 }
             }   
             using (SaveFileDialog dlg = new SaveFileDialog())
             {
                 dlg.Title = "PublicKey";
-                dlg.InitialDirectory = folderRsa;                                
-
+                dlg.InitialDirectory = folderRsa;
+                
                 if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
-                   ByteArrayToFile(dlg.FileName, publicKeyArray);
+                   string naam = "Public_" + dlg.FileName;
+                   ByteArrayToFile(naam, publicKeyArray);
                 }
             }   
 

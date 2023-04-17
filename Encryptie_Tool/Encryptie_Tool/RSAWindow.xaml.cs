@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -102,6 +104,60 @@ namespace Encryptie_Tool
             if (result == System.Windows.Forms.DialogResult.OK)
             {
                 folderRsaCipher = fbp.SelectedPath;
+            }
+        }
+
+        private void BtnEncrypt_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void BtnDecrypt_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void SlctPrivateKeyBtn_Click(object sender, RoutedEventArgs e)
+        {
+            string path = privateLstb.SelectedValuePath;
+        }
+
+        private void SlctPublicKeyBtn_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+       private void Getfile(string path)
+        {
+            try
+            {
+                if (File.Exists(path))
+                {
+                    using(RSA rsa = RSA.Create())
+                    {
+
+                    }
+                }
+            }
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            var filenames = Directory.EnumerateFiles(folderAes, "*.txt", SearchOption.TopDirectoryOnly);
+            foreach (var filename in filenames)
+            {
+                if (filename.Contains("Private"))
+                {
+                    privateLstb.Items.Add(filename);
+                }
+                else if (filename.Contains("Public"))
+                {
+                    publicLstb.Items.Add(filename);
+                }
+                else
+                {
+                    System.Windows.Forms.MessageBox.Show("Geen folder geselecteerd!");
+                }
             }
         }
     }
