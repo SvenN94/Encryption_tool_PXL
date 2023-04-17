@@ -33,6 +33,9 @@ namespace Encryptie_Tool
             InitializeComponent();
         }
 
+        string folderAes = string.Empty;
+        string folderRsa = string.Empty;
+
         // Creates an instance of the AESWindow, sets its folderAes property and shows the window as a dialog box.
         private void AesWindowMenu_Click(object sender, RoutedEventArgs e)
         {
@@ -116,8 +119,7 @@ namespace Encryptie_Tool
             }
         }
 
-        string folderAes = string.Empty;
-        string folderRsa = string.Empty;
+
 
         private void AesFolderMenu_Click(object sender, RoutedEventArgs e)
         {
