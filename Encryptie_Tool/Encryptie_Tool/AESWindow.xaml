@@ -10,29 +10,23 @@
     <DockPanel>
         <Menu DockPanel.Dock="Top" >
             <MenuItem Header="_File" >
-                <MenuItem Header="Folder">
-                    <MenuItem Header="AES" x:Name="AesFolderMenu" Click="AesFolderMenu_Click"/>
-                    <MenuItem Header="RSA" x:Name="RsaFolderMenu" Click="RsaFolderMenu_Click"/>
-                </MenuItem>
+                <MenuItem Header="AES" x:Name="AesFolderMenu" Click="AesFolderMenu_Click"/>
+                <MenuItem Header="RSA" x:Name="RsaFolderMenu" Click="RsaFolderMenu_Click"/>
             </MenuItem>
             <MenuItem Header="AES" x:Name="AesWindowMenu" Click="AesWindowMenu_Click" >
-                <MenuItem Header="_Folder">
-                    <MenuItem Header="_Ciphertext" x:Name="AesCipherMenu" Click="AesCipherMenu_Click"/>
-                    <MenuItem Header="_Plaintext" x:Name="AesPlainMenu" Click="AesPlainMenu_Click"/>
-                </MenuItem>
+                <MenuItem Header="_Ciphertext" x:Name="AesCipherMenu" Click="AesCipherMenu_Click"/>
+                <MenuItem Header="_Plaintext" x:Name="AesPlainMenu" Click="AesPlainMenu_Click"/>
             </MenuItem>
             <MenuItem Header="RSA" x:Name="RsaWindowManu" Click="RsaWindowManu_Click" >
-                <MenuItem Header="_Folder">
-                    <MenuItem Header="_Ciphertext" x:Name="RsaCipherMenu" Click="RsaCipherMenu_Click" />
+                <MenuItem Header="_Ciphertext" x:Name="RsaCipherMenu" Click="RsaCipherMenu_Click" />
                     <MenuItem Header="_Plaintext" x:Name="RsaPlainMenu" Click="RsaPlainMenu_Click"/>
-                </MenuItem>
             </MenuItem>
         </Menu>
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal">
-        <StackPanel Orientation="Vertical" >
-            <Button x:Name="BtnEncrypt" Content="Encrypt" Height="30" Width="100" Margin="0,0,0,10"/>
-            <Button x:Name="BtnDecrypt" Content="Decrypt" Height="30"/>
-        </StackPanel>
+            <StackPanel Orientation="Vertical" >
+                <Button x:Name="BtnEncrypt" Content="Encrypt" Height="30" Width="100" Margin="0,0,0,10"/>
+                <Button x:Name="BtnDecrypt" Content="Decrypt" Height="30"/>
+            </StackPanel>
             <StackPanel>
                 <ListBox x:Name="fileLstbox" />
             </StackPanel>
