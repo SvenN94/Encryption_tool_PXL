@@ -1,22 +1,10 @@
-﻿using Microsoft.Win32;
-using System;
-using System.Buffers.Text;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Forms;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using MessageBox = System.Windows.Forms.MessageBox;
 using OpenFileDialog = System.Windows.Forms.OpenFileDialog;
 using Path = System.IO.Path;
 using SaveFileDialog = System.Windows.Forms.SaveFileDialog;
@@ -52,26 +40,39 @@ namespace Encryptie_Tool
         // Generates an AES key and IV, saves them to a file specified by the user and sets the folderAes property to the directory where the file was saved.
         private void BtnGenAes_Click(object sender, RoutedEventArgs e)
         {
-            string keyBase64, IvBase64;
+            // Check if txtName is empty
+            if (string.IsNullOrEmpty(TxtFileName.Text))
+            {
+                MessageBox.Show("Please enter a name for the AES key file.");
+                return;
+            }
+
             using (Aes aesobj = Aes.Create())
             {
                 aesobj.GenerateKey(); // generate a random key for the AES algorithm
-                keyBase64 = Convert.ToBase64String(aesobj.Key); // convert the key to a Base64-encoded string
-                aesobj.GenerateIV(); // generate a random IV for the AES algorithm
-                IvBase64 = Convert.ToBase64String(aesobj.IV); // convert the IV to a Base64-encoded string
-            }
-            using (SaveFileDialog dlg = new SaveFileDialog())
-            {
-                dlg.InitialDirectory = folderAes; // set the initial directory of the file dialog to the folderAes property
-                dlg.Filter = "Text file (*.txt)|*.txt"; // set the filter to show only text files
-                string AEsKey = keyBase64 + Environment.NewLine + IvBase64; // concatenate the key and IV strings with a newline separator
-                if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                byte[] key = aesobj.Key;
+                byte[] iv = aesobj.IV;
+
+                string keyBase64 = Convert.ToBase64String(key);
+                string ivBase64 = Convert.ToBase64String(iv);
+
+                string aesKeyText = keyBase64 + Environment.NewLine + ivBase64;
+
+                using (SaveFileDialog dlg = new SaveFileDialog())
                 {
-                    File.WriteAllText(dlg.FileName, AEsKey); // write the key and IV to the selected file
-                    folderAes = Path.GetDirectoryName(dlg.FileName); // set the folderAes property to the directory where the file was saved
+                    dlg.InitialDirectory = folderAes; // set the initial directory of the file dialog to the folderAes property
+                    dlg.Filter = "Text file (*.txt)|*.txt"; // set the filter to show only text files
+                    dlg.FileName = TxtFileName.Text + ".txt"; // set the default file name to the value of the txtName textbox
+
+                    if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                    {
+                        File.WriteAllText(dlg.FileName, aesKeyText); // write the key and IV to the selected file
+                        folderAes = Path.GetDirectoryName(dlg.FileName); // set the folderAes property to the directory where the file was saved
+                    }
                 }
             }
         }
+
 
         // This method writes a byte array to a file with the specified file name.
         private void ByteArrayToFile(string fileName, byte[] byteArray)

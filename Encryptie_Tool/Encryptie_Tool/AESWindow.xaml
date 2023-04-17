@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Encryptie_Tool"
         xmlns:main="clr-namespace:Encryptie_Tool.Tools"
         mc:Ignorable="d"
-        Title="AESWindow" Height="450" Width="800" Loaded="Window_Loaded">
+        Title="AESWindow" Height="700" Width="500" Loaded="Window_Loaded">
     <DockPanel>
         <Menu DockPanel.Dock="Top" >
             <MenuItem Header="_File" >
@@ -23,12 +23,27 @@
             </MenuItem>
         </Menu>
         <StackPanel>
+            <Label Width="200px" Height="40px" Margin="10" Content="AES Encryption" FontWeight="Black" FontSize="24" HorizontalContentAlignment="Center"></Label>
+            <WrapPanel HorizontalAlignment="Center" Margin="0,30,0,10">
+                <Button x:Name="btnSelectFile" Content="Select file" ToolTip="Choose the .jpg, .bmp file you want to encrypt or decrypt." Width="150px" Height="30px" Margin="0px" Click="btnSelectFile_Click"></Button>
+                <TextBlock x:Name="txtSelectedFile" Width="250px" Height="30px" Padding="5px"></TextBlock>
+            </WrapPanel>
             <WrapPanel HorizontalAlignment="Center">
-                <Button x:Name="btnSelectFile" Content="Select file" ToolTip="ALLAH AU AHKBAR" Width="150px" Height="40px" Margin="10px"></Button>
-                <TextBlock x:Name="txtSelectedFile" Width="250px" Height="40px"></TextBlock>
+                <Button x:Name="btnSelect" ToolTip="Choose the destination where you want to save your encrypted or decrypted image to." Content="Save image at" Width="150px" Height="30px" Margin="0px" Click="btnSelect_Click" ></Button>
+                <TextBlock x:Name="txtSaveImageAt" Width="250px" Height="30px" Padding="5px"></TextBlock>
+            </WrapPanel>
+            <WrapPanel HorizontalAlignment="Center" Margin="0,10,0,10">
+                <Button x:Name="btnLoadAesKeys" ToolTip="Choose the folder with your AES keys to load them in the list below." Content="Load keys" Width="150px" Height="30px" Margin="0px" Click="btnLoadAesKeys_Click" ></Button>
+                <TextBlock x:Name="txtAesKeyFolder" Width="250px" Height="30px" Padding="5px"></TextBlock>
             </WrapPanel>
             <Label Width="150px" Height="30px" Margin="10" Content="Select AES key" FontSize="16" HorizontalContentAlignment="Center"></Label>
-            <ListBox></ListBox>
+            <ListBox HorizontalAlignment="Center" Width="400px" x:Name="fileLstbox" SelectionChanged="fileLstbox_SelectionChanged" />
+            <Label Width="150px" Height="30px" Margin="0,20,0,5" Content="Selected AES key" FontSize="12" HorizontalContentAlignment="Center"></Label>
+            <TextBlock x:Name="txtAESKey" Width="400px" Height="30"></TextBlock>
+            <WrapPanel HorizontalAlignment="Center" Margin="0,10,0,0" Width="400px">
+                <Button x:Name="btnEncrypt" Content="Encrypt" ToolTip="" Width="100px" Height="40px" Click="btnEncrypt_Click"></Button>
+                <Button x:Name="btnDecrypt" Content="Decrypt" ToolTip="" Width="100px" Height="40px" Margin="200,0,0,0" Click="btnDecrypt_Click"></Button>
+            </WrapPanel>
         </StackPanel>
     </DockPanel>
 </Window>

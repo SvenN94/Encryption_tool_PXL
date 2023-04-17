@@ -3,17 +3,15 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Forms;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using MessageBox = System.Windows.Forms.MessageBox;
+using Path = System.IO.Path;
+using Window = System.Windows.Window;
 
 namespace Encryptie_Tool
 {
@@ -28,14 +26,192 @@ namespace Encryptie_Tool
             InitializeComponent();
         }
 
-        #region UserLayout
+        #region Config
 
-        private void BtnEncrypt_Click(object sender, RoutedEventArgs e)
+        //Folderpaths
+        public string folderAes = string.Empty;
+        string folderRsa = string.Empty;
+        string folderAesCipher = string.Empty;
+        string folderAesPlain = string.Empty;
+        string folderRsaCipher = string.Empty;
+        string folderRsaPlain = string.Empty;
+        private string selectedImageFilePath = string.Empty;
+        string AESKey = string.Empty;
+
+        #endregion
+
+        #region Actions
+
+
+        //Creates a list of all encrypted filesnames in your current directory
+        public void FillListBoxAESKeys()        
         {
+
+            if (string.IsNullOrEmpty(folderAes))
+            {
+                return; // exit the function if the path is null or empty
+            }
+
+            fileLstbox.Items.Clear();
+            var filenames = Directory.EnumerateFiles(folderAes, "*.txt", SearchOption.TopDirectoryOnly);
+            foreach (var filename in filenames)
+            {
+                fileLstbox.Items.Add(filename);
+            }
+        }
+
+        public void SelectImage()
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.Filter = "Image Files (*.bmp, *.jpg, *.png)|*.bmp;*.jpg;*.png";
+
+            DialogResult result = dialog.ShowDialog();
+            if (result == System.Windows.Forms.DialogResult.OK)
+            {
+                selectedImageFilePath = dialog.FileName;
+                txtSelectedFile.Text = selectedImageFilePath;
+            }
+        }
+
+
+        public void SelectAESKey()
+        {
+            if (fileLstbox.SelectedItem != null)
+            {
+                string file = fileLstbox.SelectedItem.ToString();
+                if (File.Exists(file));
+                {
+                    string fileText = File.ReadAllText(file);
+                    AESKey = fileText;
+                }
+                txtAESKey.Text = AESKey;
+            }
 
         }
 
-        private void BtnDecrypt_Click(object sender, RoutedEventArgs e)
+        public void EncryptAes(string aesKey, string image)
+        {
+            string keyText = aesKey;
+            string[] keyParts = keyText.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+            byte[] key = Convert.FromBase64String(keyParts[0]);
+            byte[] iv = Convert.FromBase64String(keyParts[1]);
+
+            // Create a new Aes object and set its Key and IV properties
+            using (Aes aesobj = Aes.Create())
+            {
+                aesobj.Key = key;
+                aesobj.IV = iv;
+
+                // Read the selected image file into a byte array
+                byte[] imageData = File.ReadAllBytes(image);
+
+                // Encrypt the byte array using the Aes object
+                byte[] encryptedData = null;
+                using (MemoryStream msEncrypt = new MemoryStream())
+                {
+                    using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, aesobj.CreateEncryptor(), CryptoStreamMode.Write))
+                    {
+                        csEncrypt.Write(imageData, 0, imageData.Length);
+                        csEncrypt.FlushFinalBlock();
+                        encryptedData = msEncrypt.ToArray();
+                    }
+                }
+
+                // Write the encrypted byte array back to the selected image file, overwriting its previous contents
+                File.WriteAllBytes(image, encryptedData);
+            }
+        }
+
+        #endregion
+
+        #region UserLayout
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            FillListBoxAESKeys();
+            if (!string.IsNullOrEmpty(folderAes))
+            {
+                txtSaveImageAt.Text = folderAes;
+                txtAesKeyFolder.Text = folderAes;
+            }
+        }
+
+
+        private void btnSelectFile_Click(object sender, RoutedEventArgs e)
+        {
+            SelectImage();
+        }
+        private void btnSelect_Click(object sender, RoutedEventArgs e)
+        {
+            using (var folderDialog = new FolderBrowserDialog())
+            {
+                if (folderDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    string selectedPath = folderDialog.SelectedPath;
+                    txtSaveImageAt.Text = selectedPath;
+                    // save the filepath to a variable if needed
+                    string saveImageFilepath = selectedPath;
+                }
+            }
+        }
+
+        private void btnLoadAesKeys_Click(object sender, RoutedEventArgs e)
+        {
+            fileLstbox.Items.Clear();
+            using (var folderDialog = new FolderBrowserDialog())
+            {
+                if (folderDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    string selectedPath = folderDialog.SelectedPath;
+                    string[] files = Directory.GetFiles(selectedPath, "*.txt");
+                    foreach (string file in files)
+                    {
+                        fileLstbox.Items.Add(file);
+                    }
+                    txtAesKeyFolder.Text = selectedPath;
+                }
+            }
+        }
+
+        private void fileLstbox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            SelectAESKey();
+        }
+
+        private void btnEncrypt_Click(object sender, RoutedEventArgs e)
+        {
+
+            if (string.IsNullOrEmpty(selectedImageFilePath))
+            {
+                System.Windows.MessageBox.Show("Please select an image file to encrypt.");
+                return;
+            }
+
+            if (string.IsNullOrEmpty(AESKey))
+            {
+                System.Windows.MessageBox.Show("Please select an AES key to use for encryption.");
+                return;
+            }
+
+            if (txtAesKeyFolder.Text == "")
+            {
+                System.Windows.MessageBox.Show("Please select the folder that contains your AES keys.");
+            }
+
+            if (txtSaveImageAt.Text == "")
+            {
+                System.Windows.MessageBox.Show("Please select the folder that you want to save your image in.");
+            }
+
+            if (true)
+            {
+
+            }
+            EncryptAes(AESKey, selectedImageFilePath);
+
+            System.Windows.MessageBox.Show("Encryption succesfull.");
+        }
+
+        private void btnDecrypt_Click(object sender, RoutedEventArgs e)
         {
 
         }
@@ -43,16 +219,6 @@ namespace Encryptie_Tool
         #endregion
 
         #region Menu
-
-        //Config 
-        public string folderAes = string.Empty;
-        string folderRsa = string.Empty;
-        string folderAesCipher = string.Empty;
-        string folderAesPlain = string.Empty;
-        string folderRsaCipher = string.Empty;
-        string folderRsaPlain = string.Empty;
-
-
 
         //Instantiate new AES window
         private void AesWindowMenu_Click(object sender, RoutedEventArgs e)
@@ -102,15 +268,6 @@ namespace Encryptie_Tool
             folderRsaCipher = FolderBrowserDialogHelper.SelectFolder(folderRsaCipher);
         }
 
-        //Creates a list of all encrypted filesnames in your current directory
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            var filenames = Directory.EnumerateFiles(folderAes, "*.txt", SearchOption.TopDirectoryOnly);
-            foreach (var filename in filenames)
-            {
-                fileLstbox.Items.Add(filename);
-            }
-        }
         #endregion
 
 
