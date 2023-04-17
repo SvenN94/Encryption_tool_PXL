@@ -139,6 +139,10 @@ namespace Encryptie_Tool
                     }
                 }
             }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
